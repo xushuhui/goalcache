@@ -1,48 +1,40 @@
 package main
 
 import (
-	"encoding/json"
 	"fmt"
+	"geektime-ebook/geek"
+	"github.com/mattn/godown"
+	"log"
+	"os"
+	"strings"
+	"time"
 )
 
-type ArticleReq struct {
-	ID               string `json:"id"`
-	IncludeNeighbors bool   `json:"include_neighbors"`
-	IsFreelyread     bool   `json:"is_freelyread"`
-}
-type columnReq struct {
-	ID int `json:"cid"`
-}
+func generateMd(title string, content string) {
+	file, err := os.OpenFile("./ebook/"+title+".md", os.O_RDWR|os.O_CREATE, 0766) // For read access.
+	if err != nil {
+		log.Fatal(err)
+	}
+	defer file.Close()
+	godown.Convert(file, strings.NewReader(content), &godown.Option{})
 
-var articleUrl = "https://time.geekbang.org/serv/v1/article"
-var commentUrl = "https://time.geekbang.org/serv/v1/comments"
-var columnBaseUrl = "https://time.geekbang.org/column/article/"
-var columnUrl = "https://time.geekbang.org/serv/v1/column/articles"
-
+}
 func main() {
-	//var articleId string = "67888"
-	//GetArticle(articleId)
-	var chapterId = 100020801
-	ListChapter(chapterId)
-}
+	//var articleId  = "68319"
+	//article := geek.GetArticle(articleId)
+	//title := strings.Replace(article.Title,"|","-",1)
+	//generateMd(title,article.Content)
 
-func ListChapter(chapterId int) {
-	jsonStr, _ := json.Marshal(ChapterReq{
-		ID: chapterId,
-	})
+	var courseId = 100020801
+	columns := geek.ListColumn(courseId)
+	for _, v := range columns {
 
-	var resp ChapterResp
-	Post(articleUrl, jsonStr, resp)
-	fmt.Println(resp.Data)
-}
-func GetArticle(articleId string) {
-	jsonStr, _ := json.Marshal(ArticleReq{
-		ID:               articleId,
-		IncludeNeighbors: true,
-		IsFreelyread:     true,
-	})
-	var resp ArticleResp
-	Post(articleUrl, jsonStr, resp)
-	fmt.Println(resp.Data.ArticleContent, resp.Data.ArticleTitle)
+		article := geek.GetArticle(geek.Int2String(v.Id))
+		fmt.Println(article.Title)
+		title := strings.Replace(article.Title, "|", "-", 1)
 
+		generateMd(title, article.Content)
+		fmt.Println(article.Title)
+		time.Sleep(30 * time.Second)
+	}
 }
