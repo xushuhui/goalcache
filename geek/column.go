@@ -88,14 +88,13 @@ func ListColumn(courseId int) (list []Article) {
 	})
 
 	var resp ColumnResp
-	Post(columnUrl, jsonStr, &resp, "")
+	Post(columnUrl, jsonStr, &resp)
 
 	for _, v := range resp.Data.List {
 		a := Article{
 			v.ID, v.ArticleTitle, "",
 		}
 		list = append(list, a)
-
 	}
 	return
 }

@@ -2,7 +2,6 @@ package geek
 
 import (
 	"encoding/json"
-	"fmt"
 )
 
 type ArticleData struct {
@@ -107,11 +106,6 @@ type Article struct {
 	Content string `json:"content"`
 }
 
-var articleUrl = "https://time.geekbang.org/serv/v1/article"
-var commentUrl = "https://time.geekbang.org/serv/v1/comments"
-var columnBaseUrl = "https://time.geekbang.org/column/article/"
-var columnUrl = "https://time.geekbang.org/serv/v1/column/articles"
-
 func GetArticle(articleId string) (a Article) {
 	jsonStr, _ := json.Marshal(ArticleReq{
 		ID:               articleId,
@@ -120,12 +114,9 @@ func GetArticle(articleId string) (a Article) {
 	})
 	var resp ArticleResp
 
-	Post(articleUrl, jsonStr, &resp, articleId)
-	fmt.Println("content", resp.Data.ArticleContent)
-	biz := resp.Data
-
+	Post(articleUrl, jsonStr, &resp)
 	a = Article{
-		biz.ID, biz.ArticleTitle, biz.ArticleContent,
+		resp.Data.ID, resp.Data.ArticleTitle, resp.Data.ArticleContent,
 	}
 	return
 
