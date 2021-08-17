@@ -1,13 +1,11 @@
 package main
 
 import (
-	"fmt"
 	"geektime-ebook/geek"
 	"github.com/mattn/godown"
 	"log"
 	"os"
 	"strings"
-	"time"
 )
 
 func generateMd(dir string, title string, content string) {
@@ -29,25 +27,27 @@ func hasDir(dir string) {
 	}
 }
 func main() {
-	//var articleId  = "68319"
-	//article := geek.GetArticle(articleId)
-	//title := strings.Replace(article.Title,"|","-",1)
-	//generateMd(title,article.Content)
+	//var err error
+	//err = geek.Login("","")
+	//if err != nil {
+	//	log.Println(err)
+	//}
+	geek.ListCourses()
 
 	//var sku = 100020801
-	cid := 139
-	course := geek.GetCourse(cid)
-	hasDir(course.Title)
-
-	columns := geek.ListColumn(course.Sku)
-	for _, v := range columns {
-
-		article := geek.GetArticle(geek.Int2String(v.Id))
-		//过滤 "|"
-		title := strings.Replace(article.Title, "|", "-", 1)
-
-		generateMd(course.Title, title, article.Content)
-		fmt.Println(article.Title)
-		time.Sleep(10 * time.Second)
-	}
+	//cid := 139
+	//course := geek.GetCourse(cid)
+	//hasDir(course.Title)
+	//
+	//columns := geek.ListColumn(course.Sku)
+	//for _, v := range columns {
+	//
+	//	article := geek.GetArticle(geek.Int2String(v.Id))
+	//	//过滤 "|"
+	//	title := strings.Replace(article.Title, "|", "-", 1)
+	//
+	//	generateMd(course.Title, title, article.Content)
+	//	fmt.Println(article.Title)
+	//	time.Sleep(10 * time.Second)
+	//}
 }

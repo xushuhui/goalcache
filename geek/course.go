@@ -1,9 +1,40 @@
 package geek
 
-import "encoding/json"
+import (
+	"encoding/json"
+	"fmt"
+)
 
 type CourseResp struct {
 	Data CourseData `json:"data"`
+}
+
+type CoursesData struct {
+	List []CoursesItem `json:"list"`
+}
+type CoursesItem struct {
+	SubCount          int    `json:"sub_count"`
+	IsFinish          bool   `json:"is_finish"`
+	ID                int    `json:"id"`
+	ColumnPriceMarket int    `json:"column_price_market"`
+	ColumnBgcolor     string `json:"column_bgcolor"`
+	IsShareget        bool   `json:"is_shareget"`
+	ColumnTitle       string `json:"column_title"`
+	LastAid           int    `json:"last_aid"`
+	ColumnCover       string `json:"column_cover"`
+	IsIncludeAudio    bool   `json:"is_include_audio"`
+	ColumnUnit        string `json:"column_unit"`
+	ColumnSubtitle    string `json:"column_subtitle"`
+	UpdateFrequency   string `json:"update_frequency"`
+	LastChapterID     int    `json:"last_chapter_id"`
+	ColumnBeginTime   int    `json:"column_begin_time"`
+	IsExperience      bool   `json:"is_experience"`
+	HadSub            bool   `json:"had_sub"`
+	AuthorHeader      string `json:"author_header"`
+	ColumnPrice       int    `json:"column_price"`
+	AuthorName        string `json:"author_name"`
+	AuthorIntro       string `json:"author_intro"`
+	IsPreorder        bool   `json:"is_preorder"`
 }
 type CourseReq struct {
 	//{"cid":139,"with_groupbuy":false}
@@ -112,6 +143,55 @@ func GetCourse(id int) Course {
 		Cid: id,
 	})
 	var resp CourseResp
-	Post(courseUrl, jsonStr, &resp)
+	Send(courseUrl, jsonStr, &resp)
 	return Course{Sku: resp.Data.ColumnSku, Title: resp.Data.ColumnTitle}
+}
+
+type CouseOne struct {
+	AuthorHeader      string `json:"author_header"`
+	AuthorIntro       string `json:"author_intro"`
+	AuthorName        string `json:"author_name"`
+	ColumnBeginTime   int    `json:"column_begin_time"`
+	ColumnBgcolor     string `json:"column_bgcolor"`
+	ColumnCover       string `json:"column_cover"`
+	ColumnPrice       int    `json:"column_price"`
+	ColumnPriceMarket int    `json:"column_price_market"`
+	ColumnSubtitle    string `json:"column_subtitle"`
+	ColumnTitle       string `json:"column_title"`
+	ColumnUnit        string `json:"column_unit"`
+	HadSub            bool   `json:"had_sub"`
+	ID                int    `json:"id"`
+	IsExperience      bool   `json:"is_experience"`
+	IsFinish          bool   `json:"is_finish"`
+	IsIncludeAudio    bool   `json:"is_include_audio"`
+	IsPreorder        bool   `json:"is_preorder"`
+	IsShareget        bool   `json:"is_shareget"`
+	LastAid           int    `json:"last_aid"`
+	LastChapterID     int    `json:"last_chapter_id"`
+	SubCount          int    `json:"sub_count"`
+	UpdateFrequency   string `json:"update_frequency"`
+}
+type CouseOneData struct {
+	List []CouseOne `json:"list"`
+}
+
+func ListCourses() {
+	var resp Resp
+	Send(allCourseUrl, nil, &resp)
+	data := resp.Data.(map[string]interface{})
+
+	for _, i := range []string{"1", "3", "4"} {
+		var list CouseOneData
+		str, _ := json.Marshal(data[i])
+		json.Unmarshal(str, &list)
+		fmt.Println(list)
+		if len(list.List) == 0 {
+			continue
+		}
+		fmt.Println("continue ", i)
+		//for _, v := range list.List {
+		//	fmt.Println(v.AuthorName)
+		//}
+
+	}
 }

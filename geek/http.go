@@ -15,6 +15,8 @@ var commentUrl = "https://time.geekbang.org/serv/v1/comments"
 var columnBaseUrl = "https://time.geekbang.org/column/article/"
 var columnUrl = "https://time.geekbang.org/serv/v1/column/articles"
 var courseUrl = "https://time.geekbang.org/serv/v1/column/intro"
+var loginUrl = "https://account.geekbang.org/account/ticket/login"
+var allCourseUrl = "https://time.geekbang.org/serv/v1/column/all"
 
 var cookie string
 
@@ -22,6 +24,7 @@ func init() {
 	file, err := os.Open("./cookie.txt")
 	if err != nil {
 		log.Println(err)
+
 	}
 	defer file.Close()
 	b, _ := ioutil.ReadAll(file)
@@ -39,7 +42,7 @@ func getHeaders() (header map[string]string) {
 	return
 }
 
-func Post(url string, jsonStr []byte, resp interface{}) {
+func Post(url string, jsonStr []byte) (res *http.Response, err error) {
 	client := &http.Client{}
 
 	req, _ := http.NewRequest("POST", url, bytes.NewBuffer(jsonStr))
@@ -49,24 +52,31 @@ func Post(url string, jsonStr []byte, resp interface{}) {
 		req.Header.Add(k, v)
 	}
 
-	res, err := client.Do(req)
+	res, err = client.Do(req)
 	if err != nil {
 		log.Println("err", err)
 	}
-	defer res.Body.Close()
+
 	if res.StatusCode != http.StatusOK {
 		log.Fatal("http err ", res.Status)
 		return
 	}
-	body, _ := ioutil.ReadAll(res.Body)
-
-	err = json.Unmarshal(body, &resp)
-	if err != nil {
-		log.Println("err ", err, url)
-
-	}
 
 	//fmt.Println(string(body))
 
+	return
+}
+func Send(url string, jsonStr []byte, resp interface{}) (cookies []*http.Cookie, err error) {
+	res, _ := Post(url, jsonStr)
+
+	defer res.Body.Close()
+	body, _ := ioutil.ReadAll(res.Body)
+	cookies = res.Cookies()
+
+	//fmt.Println(string(body))
+	err = json.Unmarshal(body, &resp)
+	if err != nil {
+		log.Println("err ", err, url)
+	}
 	return
 }

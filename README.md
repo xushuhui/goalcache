@@ -6,7 +6,9 @@
 
 作为一个kindle党，最好的解决方案就是kindle电子书。
 
-在使用  [geektime_dl](https://github.com/jachinlin/geektime_dl/) 用python生成电子书时，项目无法正常运行，本人技术栈主要是Go，不想花时间纠结在python debug上，个人更加偏爱Go。
+在使用  [geektime_dl](https://github.com/jachinlin/geektime_dl/) 用python生成电子书时，项目无法正常运行.
+
+本人技术栈主要是Go，不想花时间纠结在python debug上，个人更加偏爱Go。
 
 所以有了这个项目
 ## 使用

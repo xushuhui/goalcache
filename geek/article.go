@@ -114,7 +114,7 @@ func GetArticle(articleId string) (a Article) {
 	})
 	var resp ArticleResp
 
-	Post(articleUrl, jsonStr, &resp)
+	Send(articleUrl, jsonStr, &resp)
 	a = Article{
 		resp.Data.ID, resp.Data.ArticleTitle, resp.Data.ArticleContent,
 	}

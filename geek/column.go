@@ -88,7 +88,7 @@ func ListColumn(courseId int) (list []Article) {
 	})
 
 	var resp ColumnResp
-	Post(columnUrl, jsonStr, &resp)
+	Send(columnUrl, jsonStr, &resp)
 
 	for _, v := range resp.Data.List {
 		a := Article{
