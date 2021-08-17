@@ -94,5 +94,6 @@ func Login(phone, password string) (err error) {
 func IsLogin() {
 	var resp Resp
 	Get(checkUserUrl, &resp)
+	//{"code":0,"data":{"result":true},"error":{},"extra":{"cost":0.037231515,"request-id":"85342e007a3a0535e24d54c3f5508dc3@2@u"}}
 	fmt.Println(resp)
 }
