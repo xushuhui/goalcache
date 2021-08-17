@@ -74,7 +74,7 @@ func Send(url string, jsonStr []byte, resp interface{}) (cookies []*http.Cookie,
 	body, _ := ioutil.ReadAll(res.Body)
 	cookies = res.Cookies()
 
-	//fmt.Println(string(body))
+	fmt.Println(string(body))
 	err = json.Unmarshal(body, &resp)
 	if err != nil {
 		log.Println("err ", err, url)

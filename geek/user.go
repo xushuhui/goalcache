@@ -3,7 +3,6 @@ package geek
 import (
 	"encoding/json"
 	"errors"
-	"fmt"
 	"io/ioutil"
 )
 
@@ -73,14 +72,16 @@ func Login(phone, password string) (err error) {
 		Remember: 1, Platform: 3, Appid: 1,
 	})
 	var resp Resp
-	cookies, _ := Send(loginUrl, jsonStr, &resp)
-
+	cookies, err := Send(loginUrl, jsonStr, &resp)
+	if err != nil {
+		return
+	}
 	if resp.Code != 0 {
 		e := resp.Error.(map[string]interface{})
 		err = errors.New(e["msg"].(string))
 		return
 	}
-	var cookie string
+
 	for _, v := range cookies {
 		c := v.Name + "=" + v.Value + ";"
 		cookie += c
@@ -90,10 +91,18 @@ func Login(phone, password string) (err error) {
 	return
 }
 
+type IsLoginResp struct {
+	Error interface{} `json:"error"`
+	Code  int         `json:"code"`
+	Data  struct {
+		Result bool `json:"result"`
+	} `json:"data"`
+}
+
 //Referer https://time.geekbang.org/dashboard/course
-func IsLogin() {
-	var resp Resp
+func IsLogin() bool {
+	var resp IsLoginResp
 	Get(checkUserUrl, &resp)
-	//{"code":0,"data":{"result":true},"error":{},"extra":{"cost":0.037231515,"request-id":"85342e007a3a0535e24d54c3f5508dc3@2@u"}}
-	fmt.Println(resp)
+	return resp.Data.Result
+
 }

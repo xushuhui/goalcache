@@ -1,10 +1,11 @@
 package main
 
 import (
-	"geektime-ebook/geek"
 	"github.com/mattn/godown"
+
 	"log"
 	"os"
+
 	"strings"
 )
 
@@ -27,13 +28,20 @@ func hasDir(dir string) {
 	}
 }
 func main() {
+	if err := rootCmd.Execute(); err != nil {
+		log.Fatal(err)
+	}
 	//var err error
-	//err = geek.Login("","")
-	//if err != nil {
-	//	log.Println(err)
+	//
+	//status := geek.IsLogin()
+	//if status == false{
+	//	err = geek.Login("","")
+	//	if err != nil {
+	//		log.Println(err)
+	//	}
+	//	status = geek.IsLogin()
+	//
 	//}
-	geek.IsLogin()
-
 	//var sku = 100020801
 	//cid := 139
 	//course := geek.GetCourse(cid)
