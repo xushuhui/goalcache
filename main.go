@@ -32,7 +32,7 @@ func main() {
 	//if err != nil {
 	//	log.Println(err)
 	//}
-	geek.ListCourses()
+	geek.IsLogin()
 
 	//var sku = 100020801
 	//cid := 139

@@ -3,6 +3,7 @@ package geek
 import (
 	"bytes"
 	"encoding/json"
+	"fmt"
 	"io/ioutil"
 	"log"
 	"net/http"
@@ -17,7 +18,7 @@ var columnUrl = "https://time.geekbang.org/serv/v1/column/articles"
 var courseUrl = "https://time.geekbang.org/serv/v1/column/intro"
 var loginUrl = "https://account.geekbang.org/account/ticket/login"
 var allCourseUrl = "https://time.geekbang.org/serv/v1/column/all"
-
+var checkUserUrl = "https://u.geekbang.org/serv/v1/user/check_user"
 var cookie string
 
 func init() {
@@ -36,7 +37,7 @@ func getHeaders() (header map[string]string) {
 	header = map[string]string{
 		"Content-Type": "application/json",
 		"Cookie":       cookie,
-		"Referer":      columnBaseUrl,
+		"Referer":      "https://time.geekbang.org/dashboard/course",
 		"User-Agent":   "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_14_3) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/73.0.3683.86 Safari/537.36",
 	}
 	return
@@ -78,5 +79,36 @@ func Send(url string, jsonStr []byte, resp interface{}) (cookies []*http.Cookie,
 	if err != nil {
 		log.Println("err ", err, url)
 	}
+	return
+}
+func Get(url string, resp interface{}) (err error) {
+	client := &http.Client{}
+
+	req, _ := http.NewRequest("GET", url, nil)
+	header := getHeaders()
+
+	for k, v := range header {
+		req.Header.Add(k, v)
+	}
+
+	res, err := client.Do(req)
+
+	if err != nil {
+		log.Println("err", err)
+		return
+	}
+	defer res.Body.Close()
+	body, _ := ioutil.ReadAll(res.Body)
+	fmt.Println(string(body))
+	if res.StatusCode != http.StatusOK {
+		log.Fatal("http err ", res.Status)
+		return
+	}
+
+	err = json.Unmarshal(body, &resp)
+	if err != nil {
+		log.Println("json err ", err, url)
+	}
+
 	return
 }

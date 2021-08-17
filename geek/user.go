@@ -3,6 +3,7 @@ package geek
 import (
 	"encoding/json"
 	"errors"
+	"fmt"
 	"io/ioutil"
 )
 
@@ -87,4 +88,11 @@ func Login(phone, password string) (err error) {
 
 	err = ioutil.WriteFile("./cookie.txt", []byte(cookie), 777)
 	return
+}
+
+//Referer https://time.geekbang.org/dashboard/course
+func IsLogin() {
+	var resp Resp
+	Get(checkUserUrl, &resp)
+	fmt.Println(resp)
 }
