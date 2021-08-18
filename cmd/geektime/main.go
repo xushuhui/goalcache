@@ -10,6 +10,10 @@ import (
 )
 
 func generateMd(dir string, title string, content string) {
+	_, err := os.Stat(dir)
+	if os.IsNotExist(err) {
+		os.Mkdir(dir, 777)
+	}
 	file, err := os.OpenFile(dir+"/"+title+".md", os.O_RDWR|os.O_CREATE, 0766) // For read access.
 	if err != nil {
 		log.Fatal(err)
@@ -21,12 +25,7 @@ func generateMd(dir string, title string, content string) {
 	})
 
 }
-func hasDir(dir string) {
-	_, err := os.Stat(dir)
-	if os.IsNotExist(err) {
-		os.Mkdir(dir, 777)
-	}
-}
+
 func main() {
 	if err := rootCmd.Execute(); err != nil {
 		log.Fatal(err)
